@@ -1,11 +1,11 @@
 {
-  "version": "2.2",
-  "release_date": "2025-12-24",
-  "download_url": "asas",
-  "checksum": "sha256:b576ee93470475eec54b1146c9c5b6aa74d149f4317c82769e809a1213f84a0e",
-  "file_size": 48431264,
+  "version": "1.1.2",
+  "release_date": "2025-12-27",
+  "download_url": "https://raw.githubusercontent.com/nonopia/24.snap_version/main/version.json",
+  "checksum": "sha256:867cef57cf5c633e3295d2aa0d47ba704a778652a0ad9ffe7647f487ad2dddba",
+  "file_size": 53532223,
   "changelog": [
-    "as"
+    "시험중"
   ],
-  "force_update": false
+  "force_update": "n"
 }
