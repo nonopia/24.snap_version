@@ -11,14 +11,15 @@ import subprocess
 from pathlib import Path
 from packaging import version as pkg_version
 
+exe_default_file_name = "snap_crypt.exe"
+download_url_name = "https://raw.githubusercontent.com/nonopia/24.snap_version/main/version.json"
+version_jason_file = "version.json"
+
 class AutoUpdater:
     """
-    자동 업데이트 시스템
-    
-    GitHub Releases 또는 웹 서버에서 최신 버전을 확인하고
-    자동으로 다운로드 및 설치하는 기능 제공
-    """
-    
+    GitHub 또는 웹 서버에서 최신 버전을 확인하고
+    자동으로 다운로드 및 설치하는 클래스
+    """    
     def __init__(self, current_version: str, update_url: str):
         """
         Args:
@@ -31,7 +32,7 @@ class AutoUpdater:
         
     def check_for_updates(self) -> dict:
         """
-        서버에서 최신 버전 정보 확인        
+        서버에서 최신 버전 정보 확인
         Returns: dict: 업데이트 정보 (새 버전이 있을 경우) 또는 None
         """
         try:
@@ -41,11 +42,9 @@ class AutoUpdater:
                 timeout=10,
                 headers={'User-Agent': 'snap_crypt-updater'}
             )
-            response.raise_for_status()
-            
+            response.raise_for_status()            
             remote_info = response.json()
             remote_version = remote_info.get("version")
-            
             if not remote_version:
                 print("[업데이트] 버전 정보 없음")
                 return None
@@ -179,20 +178,16 @@ class AutoUpdater:
     
     def apply_update(self, new_exe_path: Path) -> bool:
         """
-        다운로드된 파일로 현재 실행 파일 교체
-        
+        다운로드된 파일로 현재 실행 파일 교체        
         Args:
             new_exe_path: 새 실행 파일 경로
-        
         Returns:
             bool: 성공 여부
         """
         try:
-            print("[업데이트] 업데이트 적용 중...")
-            
+            print("[업데이트] 업데이트 적용 중...")            
             # 현재 실행 파일 백업
             backup_path = self.exe_path.with_suffix(".exe.backup")
-            
             if self.exe_path.exists():
                 print(f"[업데이트] 백업 생성: {backup_path.name}")
                 shutil.copy2(self.exe_path, backup_path)
@@ -353,7 +348,7 @@ if __name__ == "__main__":
     # 테스트 설정
     updater = AutoUpdater(
         current_version="1.0.0",
-        update_url="https://raw.githubusercontent.com/username/snap_crypt/main/version.json"
+        update_url = "https://raw.githubusercontent.com/nonopia/24.snap_version/main/version.json"
     )
     
     # 업데이트 확인
