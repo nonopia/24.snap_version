@@ -1,0 +1,45 @@
+if __name__ == '__main__':
+    import sys
+    print(f'\n\npackage file : {__file__}\nPlease run main program\n\n')
+    sys.exit(0)
+
+'''
+Basic pip install
+  - (linux) apt install python3-pip / (windows) python.exe -m pip install --upgrade pip
+  - 터미널 열때 기본적으로 수행하기 위해
+    * Ctrl + Shift + P(or F1 key) → Python: Select Interpreter 선택
+    * 가상 환경의 Python 경로 선택(예: _my_venv\Scripts\python.exe)
+
+Windwows Virtual Environment 설치
+  - * cmd 창에서 수행
+  - py -m pip install --upgrade pip
+  - python -m venv _my_venv
+  - .\_my_venv\Scripts\activate
+
+Linux Virtual Environment 설치
+  - sudo apt install python3-venv
+  - python3 -m venv _my_venv
+  - source _my_venv/bin/activate
+
+Environment Copy
+  - pip list
+  - pip freeze > req.txt
+  - deactivate
+  - python -m venv _my_venv
+  - (linux) source _my_venv/bin/activate / (windows) .\_my_venv\Scripts\activate
+  - pip install -r req.txt
+  - pip list
+  - (linux) rm req.txt / (windows) del req.txt
+  - (linux) rm -r _old_venv / (windows) rmdir _old_venv 
+'''
+
+'''
+Visual Studio shortkeys
+  - ctrl + d : 아래로 동일한것 하나씩 찾아서 선택. 한번에 바꿈
+  - ctrl + / : 해당라인 주석 처리
+  - alt + shift + DRAG : 마우스 포인터 복수개 주루륵 생김(마우스 포인트 위치 중심)
+  - alt + 마우스 클릭 : 클릭할때마다 마우스 포인터가 생김, 한번에 바꿈
+  - alt + up/down : 한글자 이상 또는 여러줄을 선택한후 화살표 누르면 전체 줄이 위아래로 포지셔닝. 복붙 효과
+  - alt + up/down + 상하 화살표 : 해당 문장을 복사해서 위아래로
+  - alt + shift + i : 미리 선택된 다수 문자에 마우스 포인터가 생겨 동시에 내용 변경(문장 끝에)
+'''

@@ -5,10 +5,40 @@ import hashlib
 import sys
 from pathlib import Path
 from datetime import datetime
+import os, io
 
 exe_default_file_name = "snap_crypt.exe"
 download_url_name = "https://raw.githubusercontent.com/nonopia/24.snap_version/main/version.json"
 version_jason_file = "version.json"
+
+import PyInstaller.__main__ #python make_version_json.py --build
+separator = ';' if os.name == 'nt' else ':' #Windows ';' / Linux ':' 
+absolute_path_name = Path(sys.argv[0]).resolve()  # 절대 경로로 변환
+script_dir = absolute_path_name.parent
+filename_stem = absolute_path_name.stem  #ext 없는 finename
+exe_filename = absolute_path_name.stem  ## 출력 파일 이름
+if "--build" in sys.argv:
+    build_dist_dir = script_dir / "build_dist"
+    build_dist_dir.mkdir(exist_ok=True)
+    PyInstaller.__main__.run([
+        str(absolute_path_name),           # 전체 경로 (문자열로 변환)
+        f'--name={exe_filename}',          # 출력 파일 이름
+        '--onefile',
+        '--noupx',
+        '--noconsole',
+        f'--icon={script_dir / "build_dist" / "_icon" / "locker_icon.ico"}',
+        f'--distpath={build_dist_dir}',
+        f'--workpath={build_dist_dir}',
+        f'--specpath={build_dist_dir}'
+#        f'--add-data={os.path.join(".", "remote_info.json")}{separator}.', # ./1.json이 실행시에는 _MEI/1.json에 위치
+#        f'--add-data={os.path.join(".", "data", "remote_info.json")}{separator}config', #./data/1.json이 실행시에는 _MEI/config/1.json에 위치
+#        '--hidden-import=pyscreeze', '--hidden-import=pillow', '--hidden-import=numpy',
+#        '--exclude-module=pwd', '--exclude-module=grp', '--exclude-module=fcntl', '--exclude-module=termios', '--exclude-module=PyQt5'
+    ])
+    spec_file = build_dist_dir / f'{filename_stem}.spec'     # spec 파일 삭제
+    spec_file.unlink(missing_ok=True)
+    sys.exit(0)
+
 
 def calculate_checksum(file_path: Path) -> str:
     """파일의 SHA256 체크섬 계산"""
@@ -86,6 +116,7 @@ def get_user_input(display_prompt: str, exe_default_file_name: str, file_option=
     return return_path
 
 def main():
+    print()
     print("=" * 60)
     print("version.json 생성 도구")
     print("=" * 60)

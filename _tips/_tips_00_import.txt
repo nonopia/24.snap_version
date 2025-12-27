@@ -1,0 +1,36 @@
+if __name__ == '__main__':
+    print(f'\n\npackage file : {__file__}\nPlease run main program\n\n')
+    sys.exit(-1)
+
+'''
+python.exe -m pip install --upgrade pip
+pip install packaging  #새로 설치/업그레이드 하였는데 일부 모듈을 찾을수 없다고 할떄
+pip install --upgrade msoffcrypto-tool
+pip install webdriver-manager==3.8.2
+
+
+pip install pyautogui
+pip install cryptography
+pip install pynput pywin32 pyMeow
+pip install pyscreenshot
+pip install pyscreeze pillow screeninfo
+pip install pwinput
+pip install pyQT6
+#pip install pyqt6-tools  #for pyQT Designer 
+
+pip install pyinstaller
+  pyinstaller --onefile PC-Win.py
+  : onefile make시 특별한 모듈(예 : pyautogui)이 import 되지 않을 경우 아래를 코딩
+  from PyInstaller.utils.hooks import collect_submodules
+  hiddenimports = collect_submodules('pyautogui')
+
+
+
+_my_venv -> 처음부터 완전 다시 setting
+pip install 을 정확히 위의 것만 install
+build/cap/warn-cap.txt의 missing module을 chatGPT에 넣어서 아래와 같이 pyinstaller 함
+  for QT pyinstaller --name snap_crypt_Q_mul --onefile --noupx --noconsole --icon=.\30_completed\locker_icon.ico --hidden-import=pyscreeze --hidden-import=pillow --hidden-import=numpy --exclude-module=pwd --exclude-module=grp --exclude-module=fcntl --exclude-module=termios --exclude-module=PyQt5 snap_crypt.py
+  for alt pyinstaller --name snap_crypt_alt_mu --onefile --noupx --icon=.\30_completed\locker_icon.ico --hidden-import=pyscreeze --hidden-import=pillow --hidden-import=numpy --exclude-module=pwd --exclude-module=grp --exclude-module=fcntl --exclude-module=termios --exclude-module=PyQt5 snap_crypt.py
+  for menu pyinstaller --name snap_crypt_menu --onefile --noupx --icon=.\30_completed\locker_icon.ico --hidden-import=pyscreeze --hidden-import=pillow --hidden-import=numpy --exclude-module=pwd --exclude-module=grp --exclude-module=fcntl --exclude-module=termios --exclude-module=PyQt5 snap_crypt.py
+python snap_crypt.py --build
+  '''
