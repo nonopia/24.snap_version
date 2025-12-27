@@ -13,7 +13,7 @@ timeout /t 5 /nobreak > nul
 
 REM 파일 교체
 echo 파일 교체 중...
-move /Y "C:\Users\nono\AppData\Local\Temp\tmp7lrd03v5\snap_crypt_update.exe" "D:\55.Project\24.snap_version\up_auto_updater.py" > nul 2>&1
+move /Y "C:\Users\nono\AppData\Local\Temp\tmpm2fs_q7s\snap_crypt_update.exe" "D:\55.Project\24.snap_version\up_auto_updater.py" > nul 2>&1
 
 REM 교체 성공 여부 확인
 if %ERRORLEVEL% EQU 0 (
@@ -55,8 +55,8 @@ if %ERRORLEVEL% EQU 0 (
 )
 
 REM 임시 파일 정리
-if exist "C:\Users\nono\AppData\Local\Temp\tmp7lrd03v5" (
-    rmdir /S /Q "C:\Users\nono\AppData\Local\Temp\tmp7lrd03v5" > nul 2>&1
+if exist "C:\Users\nono\AppData\Local\Temp\tmpm2fs_q7s" (
+    rmdir /S /Q "C:\Users\nono\AppData\Local\Temp\tmpm2fs_q7s" > nul 2>&1
 )
 
 REM 배치 파일 자체 삭제

@@ -7,7 +7,7 @@ from pathlib import Path
 from datetime import datetime
 import os, io
 
-version_info_dic = {
+VERSION_INFO_DIC = {
         "version": "",
         "release_date": "",
         "download_url": "",
@@ -80,7 +80,7 @@ def create_version_json(version: str, download_url: str, exe_path: Path, change_
     file_size = exe_path.stat().st_size
 
     # version.json 데이터 생성
-    version_info_dic.update({
+    VERSION_INFO_DIC.update({
         "version": version,
         "release_date": datetime.now().strftime("%Y-%m-%d-%H:%M:%S"),
         "download_url": download_url,
@@ -94,12 +94,12 @@ def create_version_json(version: str, download_url: str, exe_path: Path, change_
     if output_path is None:
         output_path = Path(version_json_file)
     with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(version_info_dic, f, indent=2, ensure_ascii=False)
+        json.dump(VERSION_INFO_DIC, f, indent=2, ensure_ascii=False)
     
     print(f"\nversion.json 생성 완료: {output_path}")
     print("\n생성된 내용:")
     print("=" * 60)
-    print(json.dumps(version_info_dic, indent=2, ensure_ascii=False))
+    print(json.dumps(VERSION_INFO_DIC, indent=2, ensure_ascii=False))
     print("=" * 60)    
     return True
 

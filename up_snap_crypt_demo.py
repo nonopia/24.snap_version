@@ -7,7 +7,7 @@ from pathlib import Path
 
 # auto_updater 모듈 import
 try:
-    from auto_updater import AutoUpdater
+    from up_auto_updater import AutoUpdater
 except ImportError:
     print("오류: auto_updater.py 파일이 필요합니다.")
     sys.exit(1)

@@ -8,9 +8,9 @@ import subprocess
 from pathlib import Path
 from packaging import version as pkg_version
 
-current_exe_version = "1.0.0"
+SNAP_CRYPT_VERSION = "1.0.0"
 
-version_info_dic = {
+VERSION_INFO_DIC = {
         "version": "",
         "release_date": "",
         "download_url": "",
@@ -78,7 +78,7 @@ class AutoUpdater:
             print(f"[업데이트] 확인 실패: {e}")
             return None
     
-    def download_update(self, download_url: str, expected_checksum: str, 
+    def download_update(self, download_exe_url: str, expected_checksum: str, 
                        progress_callback=None) -> Path:
         """
         업데이트 파일 다운로드 및 무결성 검증
@@ -90,7 +90,7 @@ class AutoUpdater:
             Path: 다운로드된 파일 경로 또는 None
         """
         try:
-            print(f"[업데이트] 다운로드 시작: {download_url}")
+            print(f"[업데이트] 다운로드 시작: {download_exe_url}")
             
             # 임시 디렉토리에 다운로드
             temp_dir = Path(tempfile.mkdtemp())
@@ -98,7 +98,7 @@ class AutoUpdater:
             
             # 스트리밍 다운로드
             response = requests.get(
-                download_url,
+                download_exe_url,
                 stream=True,
                 timeout=300,
                 headers={'User-Agent': 'snap_crypt-updater'}
@@ -122,12 +122,9 @@ class AutoUpdater:
                             progress = int((downloaded / total_size) * 100)
                             if progress_callback:
                                 progress_callback(progress)
-                            
                             # 10% 단위로 출력
                             if downloaded % (total_size // 10) < chunk_size:
                                 print(f"[업데이트] 다운로드 중... {progress}%")
-            
-            print("[업데이트] 다운로드 완료")
             
             # 체크섬 검증
             print("[업데이트] 무결성 검증 중...")
@@ -151,31 +148,21 @@ class AutoUpdater:
     
     def verify_checksum(self, file_path: Path, expected_checksum: str) -> bool:
         """
-        파일의 SHA256 체크섬 검증
-        
+        SHA256 체크섬 검증
         Args:
             file_path: 검증할 파일 경로
             expected_checksum: 예상 체크섬 (형식: "sha256:..." 또는 해시값)
-        
         Returns:
             bool: 검증 성공 여부
         """
-        # "sha256:" 접두사 제거
+        # "sha256:" 제거
         if expected_checksum.startswith("sha256:"):
-            expected_checksum = expected_checksum[7:]
-        
-        # 파일 해시 계산
-        sha256_hash = hashlib.sha256()
-        
+            expected_checksum = expected_checksum[7:]        
+        sha256_hash = hashlib.sha256()        
         with open(file_path, "rb") as f:
             for chunk in iter(lambda: f.read(4096), b""):
                 sha256_hash.update(chunk)
-        
         calculated_checksum = sha256_hash.hexdigest()
-        
-        print(f"[업데이트] 예상 체크섬: {expected_checksum[:16]}...")
-        print(f"[업데이트] 계산 체크섬: {calculated_checksum[:16]}...")
-        
         # 대소문자 무시 비교
         return calculated_checksum.lower() == expected_checksum.lower()
     
@@ -302,42 +289,6 @@ del "%~f0" > nul 2>&1
         
         return batch_path
 
-
-def generate_version_json(version: str, download_url: str, 
-                         exe_path: Path, change_log: list) -> dict:
-    """
-    version.json 파일 생성 헬퍼 함수
-    Args:
-        version: 버전 번호
-        download_url: 다운로드 URL
-        exe_path: 실행 파일 경로 (체크섬 계산용)
-        change_log: 변경사항 목록    
-    Returns:
-        dict: version.json 데이터
-    """
-    from datetime import datetime
-    
-    # 체크섬 계산
-    sha256_hash = hashlib.sha256()
-    with open(exe_path, 'rb') as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            sha256_hash.update(chunk)
-    
-    checksum = f"sha256:{sha256_hash.hexdigest()}"
-    file_size = exe_path.stat().st_size
-    
-    version_info_dic.update({
-        "version": version,
-        "release_date": datetime.now().strftime("%Y-%m-%d-%H:%M:%S"),
-        "download_url": download_url,
-        "checksum": checksum,
-        "file_size": file_size,
-        "change_log": change_log,
-        "force_update": False
-    })
-    return version_info_dic
-
-
 # 테스트용 메인 함수
 if __name__ == "__main__":
     print("=" * 50)
@@ -347,7 +298,7 @@ if __name__ == "__main__":
     
     # 테스트 설정
     updater = AutoUpdater(
-        current_version = current_exe_version,
+        current_version = SNAP_CRYPT_VERSION,
         update_url = download_json_url
     )
     
@@ -355,29 +306,20 @@ if __name__ == "__main__":
     remote_version_info_dic = updater.check_for_updates()
     
     if remote_version_info_dic:
-        display_version = f'새 버전 발견!\n버전: {remote_version_info_dic["version"]}\n출시일: {remote_version_info_dic["release_date"]}\n변경사항:\n   ' + '\n   '.join(remote_version_info_dic.get('change_log', []))
-#        print()
-#        print("새 버전 발견!")
-#        print(f"버전: {remote_version_info_dic['version']}")
-##        print(f"출시일: {remote_version_info_dic['release_date']}")
- #       print(f"변경사항:")
+        display_version = f'새 버전 발견!\n버전: {remote_version_info_dic["version"]}\n출시일: {remote_version_info_dic["release_date"]}\n변경사항:\n'
         change_log_items = remote_version_info_dic.get('change_log', [])
         formatted_items = [f"  - {item}" for item in change_log_items]
         change_log_str = "\n".join(formatted_items)
+        display_version += change_log_str + "\n"
+        print(display_version)
         
         # 사용자 확인
-        response = input("업데이트를 진행하시겠습니까? (y/n): ")
-        
+        response = input("업데이트를 진행하시겠습니까? (y/n): ")        
         if response.lower() == 'y':
-            # 다운로드
-            remote_version_info_dic['download_url'] = download_exe_file_url
-#            "https://raw.githubusercontent.com/nonopia/24.snap_version/main/snap_crypt.exe"
-
             new_exe = updater.download_update(
                 remote_version_info_dic['download_url'],
                 remote_version_info_dic['checksum']
-            )
-            
+            )            
             if new_exe:
                 # 업데이트 적용
                 if updater.apply_update(new_exe):
